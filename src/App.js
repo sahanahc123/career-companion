@@ -1,15 +1,14 @@
 import React from "react";
+import TaskTracker from "./componenets/TaskTracker";
 
 function App() {
+  const myTasks = ["create resume","Apply to 3 jobs", "LeetCode Practice"];
+
   return (
-    <div>
+    <div className="App">
     <h1>Carrer Companion</h1>
-    <p>Your Personal Job Preparation Tracker</p>
+     <TaskTracker tasks ={myTasks}/>
     </div>
-
-    
-
-
   );
 }
 export default App;

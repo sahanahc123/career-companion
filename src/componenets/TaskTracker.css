@@ -1,0 +1,33 @@
+.task-tracker{
+    background-color:#f4f4f4;
+    padding: 20px;
+    border-radius: 12px;
+    width:400px;
+    margin: 20px auto;
+   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+}
+
+.task-tracker h2{
+    text-align: center;
+      color: #333;
+}
+
+.task-list{
+    list-style: none;
+    padding: 0;
+}
+
+.task{
+    background-color: white;
+    margin: 8px 0px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border-left: 5px solid #007bff;
+  font-weight: 500;
+    
+}
+.completed {
+  text-decoration: line-through;
+  color: #999;
+}
