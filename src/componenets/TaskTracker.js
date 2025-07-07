@@ -6,18 +6,36 @@ function TaskTracker({tasks}) {
     const [completed, setCompleted] = useState(
   tasks.map(() => false)
 );
+  const [taskInput, setTaskInput] = useState("");
+
+
     const toggleTask = (index) => {
     const updated = [...completed];
     updated[index] = !updated[index];
     setCompleted(updated);
+
+    
   };
+
+  const addTask = () => {
+  if (taskInput.trim() !== "") {
+    setTaskList([...taskList, taskInput]);
+    setCompleted([...completed, false]);
+    setTaskInput(""); 
+  }
+};
+
+
+
+  const [taskList, setTaskList] = useState(tasks);
 
 
     return (
+      
       <div className="task-tracker">
       <h2>📝 Task Tracker</h2>
       <ul className="task-list">
-        {tasks.map((task, index) => (
+        {taskList.map((task, index) => (
           <li
             className={`task ${completed[index] ? "completed" : ""}`}
             key={index}
@@ -29,11 +47,19 @@ function TaskTracker({tasks}) {
     />
         {task}
       </li>
-    ))};
+    ))}
     </ul>
+
+    <input type = "text" placeholder="Enter your task"
+    value={taskInput}
+    onChange={(e) => setTaskInput(e.target.value)}
+    />
+<button onClick={addTask}>Add Task</button>
             
  </div>
     );
+
+
 }
 export default TaskTracker;
 
