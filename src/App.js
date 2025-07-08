@@ -6,8 +6,8 @@ function App() {
 
   return (
     <div className="App">
-    <h1>Carrer Companion</h1>
-     <TaskTracker tasks ={myTasks}/>
+    <h1>Career Companion</h1>
+    <TaskTracker tasks ={myTasks}/>
     </div>
   );
 }

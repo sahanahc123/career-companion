@@ -1,6 +1,8 @@
 import React from "react"; // Bring React so we can use JSX
 import './TaskTracker.css';
 import { useState } from "react";
+import TaskItem from "./TaskItem";
+
 
 function TaskTracker({tasks}) {
     const [completed, setCompleted] = useState(
@@ -13,9 +15,13 @@ function TaskTracker({tasks}) {
     const updated = [...completed];
     updated[index] = !updated[index];
     setCompleted(updated);
-
-    
-  };
+};
+  const deleteTask = (index) => {
+  const updatedTasks = taskList.filter((_, i) => i !== index);
+  const updatedCompleted = completed.filter((_, i) => i !== index);
+  setTaskList(updatedTasks);
+  setCompleted(updatedCompleted);
+};
 
   const addTask = () => {
   if (taskInput.trim() !== "") {
@@ -25,9 +31,7 @@ function TaskTracker({tasks}) {
   }
 };
 
-
-
-  const [taskList, setTaskList] = useState(tasks);
+const [taskList, setTaskList] = useState(tasks);
 
 
     return (
@@ -35,26 +39,25 @@ function TaskTracker({tasks}) {
       <div className="task-tracker">
       <h2>📝 Task Tracker</h2>
       <ul className="task-list">
-        {taskList.map((task, index) => (
-          <li
-            className={`task ${completed[index] ? "completed" : ""}`}
-            key={index}
-          >
-    <input
-      type="checkbox"
-      checked={completed[index]}
-      onChange={() => toggleTask(index)}
-    />
-        {task}
-      </li>
-    ))}
+      {taskList.map((task, index) => (
+     <TaskItem
+     key={index}
+     task={task}
+     index={index}
+     completed={completed[index]}
+     onToggle={toggleTask}
+     onDelete={deleteTask}
+  />
+))}
+
     </ul>
 
     <input type = "text" placeholder="Enter your task"
     value={taskInput}
     onChange={(e) => setTaskInput(e.target.value)}
     />
-<button onClick={addTask}>Add Task</button>
+    <button onClick={addTask}>Add Task</button>
+
             
  </div>
     );

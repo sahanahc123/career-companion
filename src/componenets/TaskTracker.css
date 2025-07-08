@@ -1,3 +1,11 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  background-color: #f8f8f8;
+  margin: 0;
+}
 .task-tracker{
     background-color:#f4f4f4;
     padding: 20px;
