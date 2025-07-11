@@ -2,6 +2,7 @@ import React from "react"; // Bring React so we can use JSX
 import './TaskTracker.css';
 import { useState } from "react";
 import TaskItem from "./TaskItem";
+import { useEffect } from "react";
 
 
 function TaskTracker({tasks}) {
@@ -32,25 +33,41 @@ function TaskTracker({tasks}) {
 };
 
 const [taskList, setTaskList] = useState(tasks);
+useEffect(() => {
+  const savedTasks = localStorage.getItem("taskList");
+  if (savedTasks) {
+    setTaskList(JSON.parse(savedTasks));
+  }
+}, []);
+
+useEffect(() => {
+  localStorage.setItem("taskList", JSON.stringify(taskList));
+}, [taskList]);
+
+
 
 
     return (
       
       <div className="task-tracker">
       <h2>📝 Task Tracker</h2>
-      <ul className="task-list">
-      {taskList.map((task, index) => (
-     <TaskItem
-     key={index}
-     task={task}
-     index={index}
-     completed={completed[index]}
-     onToggle={toggleTask}
-     onDelete={deleteTask}
-  />
-))}
+      {taskList.length === 0 ? (
+  <p className="empty-message">🎉 No tasks for now!</p>
+) : (
+  <ul className="task-list">
+    {taskList.map((task, index) => (
+      <TaskItem
+        key={index}
+        task={task}
+        index={index}
+        completed={completed[index]}
+        onToggle={toggleTask}
+        onDelete={deleteTask}
+      />
+    ))}
+  </ul>
+)}
 
-    </ul>
 
     <input type = "text" placeholder="Enter your task"
     value={taskInput}

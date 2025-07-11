@@ -39,3 +39,10 @@ body {
   text-decoration: line-through;
   color: #999;
 }
+
+.empty-message {
+  text-align: center;
+  color: #777;
+  font-style: italic;
+  margin-top: 20px;
+}
