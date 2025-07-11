@@ -1,18 +1,18 @@
 import React from "react";
+import { FaTrash } from "react-icons/fa";
 
 function TaskItem({ task, index, completed, onToggle, onDelete }) {
   return (
-    <li className={`task ${completed ? "completed" : ""}`} key={index}>
+    <li className={`task ${completed ? "completed" : ""}`}>
       <input
         type="checkbox"
         checked={completed}
         onChange={() => onToggle(index)}
       />
-      {task}
-<button onClick={() => onDelete(index)} className="delete-button">🗑️</button>
+      <span>{task}</span>
+      <FaTrash onClick={() => onDelete(index)} style={{ cursor: "pointer" }} />
     </li>
   );
 }
 
 export default TaskItem;
-
