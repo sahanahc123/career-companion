@@ -6,17 +6,23 @@ import { useEffect } from "react";
 
 
 function TaskTracker({tasks}) {
-    const [completed, setCompleted] = useState(
-  tasks.map(() => false)
+    // 1. States
+    const [taskInput, setTaskInput] = useState("");
+    const [taskList, setTaskList] = useState(tasks);
+
+    const [completed, setCompleted] = useState(() =>
+  JSON.parse(localStorage.getItem("completed")) || tasks.map(() => false)
 );
-  const [taskInput, setTaskInput] = useState("");
 
 
+  // 2. Toggle completion
     const toggleTask = (index) => {
     const updated = [...completed];
     updated[index] = !updated[index];
     setCompleted(updated);
 };
+
+  // 3. Delete task
   const deleteTask = (index) => {
   const updatedTasks = taskList.filter((_, i) => i !== index);
   const updatedCompleted = completed.filter((_, i) => i !== index);
@@ -24,29 +30,34 @@ function TaskTracker({tasks}) {
   setCompleted(updatedCompleted);
 };
 
-  const addTask = () => {
+  // 4. Add new task
+const addTask = () => {
   if (taskInput.trim() !== "") {
     setTaskList([...taskList, taskInput]);
     setCompleted([...completed, false]);
     setTaskInput(""); 
   }
 };
-
-const [taskList, setTaskList] = useState(tasks);
+  // 5. Load saved tasks from localStorage (only on first render)
 useEffect(() => {
   const savedTasks = localStorage.getItem("taskList");
   if (savedTasks) {
     setTaskList(JSON.parse(savedTasks));
   }
+  
 }, []);
 
+  
+  // 6. Save tasks & completion to localStorage
 useEffect(() => {
   localStorage.setItem("taskList", JSON.stringify(taskList));
 }, [taskList]);
 
+useEffect(() => {
+  localStorage.setItem("completed", JSON.stringify(completed));
+},[completed]);
 
-
-
+  // 7. JSX return
     return (
       
       <div className="task-tracker">
@@ -68,18 +79,13 @@ useEffect(() => {
   </ul>
 )}
 
-
-    <input type = "text" placeholder="Enter your task"
+ <input type = "text" placeholder="Enter your task"
     value={taskInput}
     onChange={(e) => setTaskInput(e.target.value)}
     />
     <button onClick={addTask}>Add Task</button>
-
-            
- </div>
-    );
-
-
+</div>
+ );
 }
 export default TaskTracker;
 
