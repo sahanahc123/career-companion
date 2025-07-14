@@ -95,3 +95,22 @@ body {
   background-color: #0056b3;
 }
 
+.clear-btn {
+  background-color: #f44336;
+  color: white;
+  padding: 8px 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.clear-btn:hover {
+  background-color: #d32f2f;
+}
+
+.completed-count {
+  font-size: 16px;
+  color: green;
+  margin-bottom: 15px;
+  font-weight: bold;
+}

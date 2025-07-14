@@ -9,10 +9,12 @@ function TaskTracker({tasks}) {
     // 1. States
     const [taskInput, setTaskInput] = useState("");
     const [taskList, setTaskList] = useState(tasks);
-
+    const [filter, setFilter] = useState("all");
     const [completed, setCompleted] = useState(() =>
   JSON.parse(localStorage.getItem("completed")) || tasks.map(() => false)
 );
+const completedCount = completed.filter(val => val).length;
+
 
 
   // 2. Toggle completion
@@ -32,12 +34,34 @@ function TaskTracker({tasks}) {
 
   // 4. Add new task
 const addTask = () => {
-  if (taskInput.trim() !== "") {
-    setTaskList([...taskList, taskInput]);
-    setCompleted([...completed, false]);
-    setTaskInput(""); 
+  const trimmed = taskInput.trim();
+  if (trimmed === ""){
+      alert("Please enter a task!");
+      return;
   }
+    
+
+  if (taskList.includes(trimmed)) {
+    alert("Task already exists!");
+    return;
+  }
+
+  setTaskList([...taskList, trimmed]);
+  setCompleted([...completed, false]);
+  setTaskInput(""); 
 };
+
+
+const clearAllTasks = () => {
+  setTaskList([]);
+  setCompleted([]);
+  localStorage.removeItem("taskList");
+  localStorage.removeItem("completed");
+};
+
+
+
+
   // 5. Load saved tasks from localStorage (only on first render)
 useEffect(() => {
   const savedTasks = localStorage.getItem("taskList");
@@ -57,16 +81,49 @@ useEffect(() => {
   localStorage.setItem("completed", JSON.stringify(completed));
 },[completed]);
 
+const filteredTasks = taskList.filter((_, index) => {
+  if (filter === "all") return true;
+  if (filter === "completed") return completed[index];
+  if (filter === "incomplete") return !completed[index];
+  return true;
+});
+
+
+
   // 7. JSX return
     return (
       
       <div className="task-tracker">
       <h2>📝 Task Tracker</h2>
-      {taskList.length === 0 ? (
-  <p className="empty-message">🎉 No tasks for now!</p>
-) : (
+     {completedCount > 0 && (
+  <p className="completed-counter">
+    ✅ You’ve completed {completedCount} task{completedCount > 1 ? "s" : ""}!
+  </p>
+   )}  {taskList.length === 0 ? (
+  <p className="empty-message">🎉 No tasks for now!</p>) : (
   <ul className="task-list">
-    {taskList.map((task, index) => (
+    <div className="filter-buttons">
+  <button
+    className={filter === "all" ? "active" : ""}
+    onClick={() => setFilter("all")}
+  >
+    All
+  </button>
+  <button
+    className={filter === "completed" ? "active" : ""}
+    onClick={() => setFilter("completed")}
+  >
+    Completed
+  </button>
+  <button
+    className={filter === "incomplete" ? "active" : ""}
+    onClick={() => setFilter("incomplete")}
+  >
+    Incomplete
+  </button>
+</div>
+
+    {filteredTasks.map((task, index) => (
       <TaskItem
         key={index}
         task={task}
@@ -83,8 +140,15 @@ useEffect(() => {
     value={taskInput}
     onChange={(e) => setTaskInput(e.target.value)}
     />
-    <button onClick={addTask}>Add Task</button>
+<button onClick={addTask}>Add Task</button>
+{taskList.length > 0 && (
+  <button className="clear-btn" onClick={clearAllTasks}>
+    Clear All Tasks
+  </button>
+)}
+
 </div>
+
  );
 }
 export default TaskTracker;
