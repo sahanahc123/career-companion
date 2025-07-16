@@ -8,15 +8,16 @@ import { useEffect } from "react";
 function TaskTracker({tasks}) {
     // 1. States
     const [taskInput, setTaskInput] = useState("");
-    const [taskList, setTaskList] = useState(tasks);
+const [taskList, setTaskList] = useState(() => {
+  const savedTasks = localStorage.getItem("taskList");
+  return savedTasks ? JSON.parse(savedTasks) : tasks;
+});
     const [filter, setFilter] = useState("all");
     const [completed, setCompleted] = useState(() =>
   JSON.parse(localStorage.getItem("completed")) || tasks.map(() => false)
 );
 const completedCount = completed.filter(val => val).length;
-
-
-
+  
   // 2. Toggle completion
     const toggleTask = (index) => {
     const updated = [...completed];
@@ -30,6 +31,11 @@ const completedCount = completed.filter(val => val).length;
   const updatedCompleted = completed.filter((_, i) => i !== index);
   setTaskList(updatedTasks);
   setCompleted(updatedCompleted);
+};    
+ const editTask = (index, newText) => {
+  const updatedTasks = [...taskList];
+  updatedTasks[index] = newText;
+  setTaskList(updatedTasks);
 };
 
   // 4. Add new task
@@ -58,19 +64,6 @@ const clearAllTasks = () => {
   localStorage.removeItem("taskList");
   localStorage.removeItem("completed");
 };
-
-
-
-
-  // 5. Load saved tasks from localStorage (only on first render)
-useEffect(() => {
-  const savedTasks = localStorage.getItem("taskList");
-  if (savedTasks) {
-    setTaskList(JSON.parse(savedTasks));
-  }
-  
-}, []);
-
   
   // 6. Save tasks & completion to localStorage
 useEffect(() => {
@@ -131,6 +124,8 @@ const filteredTasks = taskList.filter((_, index) => {
         completed={completed[index]}
         onToggle={toggleTask}
         onDelete={deleteTask}
+        onEdit={editTask}
+
       />
     ))}
   </ul>
