@@ -7,6 +7,7 @@ import { useEffect } from "react";
 
 function TaskTracker() {
     // 1. States
+    const [searchTerm, setSearchTerm] = useState("");
     const [taskInput, setTaskInput] = useState("");
     const [dueDate, setDueDate] = useState("");
     const [priority, setPriority] = useState("Medium"); 
@@ -89,12 +90,18 @@ useEffect(() => {
 
 
 
-const filteredTasks = taskList.filter((task) => {
-  if (filter === "all") return true;
-  if (filter === "completed") return task.completed;
-  if (filter === "incomplete") return !task.completed;
-  return true;
-});
+const filteredTasks = taskList
+  .filter((task) => {
+    if (filter === "Completed") return task.completed;
+    if (filter === "Incomplete") return !task.completed;
+    return true;
+  })
+  .filter((task) => {
+    const lowerSearch = searchTerm.toLowerCase();
+    const inText = task.text.toLowerCase().includes(lowerSearch);
+    const inTags = task.tags?.some(tag => tag.toLowerCase().includes(lowerSearch));
+    return inText || inTags;
+  });
 
 
 
@@ -131,6 +138,13 @@ const filteredTasks = taskList.filter((task) => {
     Incomplete
   </button>
 </div>
+<input
+  type="text"
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
+  placeholder="Search tasks or tags..."
+  className="search-input"
+/>
 
     {filteredTasks.map((task, index) => (
       <TaskItem

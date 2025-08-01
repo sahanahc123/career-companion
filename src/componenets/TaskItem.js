@@ -8,17 +8,23 @@ function TaskItem({ task, index, completed, onToggle, onDelete, onEdit ,taskList
   const [editText, setEditText] = useState(task.text);
   const [editDueDate, setEditDueDate] = useState(task.dueDate || "");
   const [editPriority, setEditPriority] = useState(task.priority || "Medium");
+  const [editTags, setEditTags] = useState(task.tags ? task.tags.join(", ") : "");
 
-const handleBlur = () => {
+
+
+  const handleBlur = () => {
   const trimmedText = editText.trim();
   if (trimmedText === "") return;
-
   const updatedTasks = [...taskList];
   updatedTasks[index] = {
     ...updatedTasks[index],
     text: trimmedText,
     dueDate: editDueDate,
     priority: editPriority,
+    tags: editTags
+    .split(",")
+    .map(tag => tag.trim())
+    .filter(tag => tag !== ""),
   };
 
   setTaskList(updatedTasks);
@@ -31,8 +37,6 @@ const handleKeyDown = (e) => {
     handleBlur();
   }
 };
-
-
 
   return (
     <li className={`task ${task.completed ? "completed" : ""}`}>
@@ -49,32 +53,50 @@ const handleKeyDown = (e) => {
       value={editText}
       onChange={(e) => setEditText(e.target.value)}
       onBlur={handleBlur}
-  onKeyDown={handleKeyDown}
-    />
+      onKeyDown={handleKeyDown}
+      placeholder="Enter tags (comma separated)"
+     />
     <input
       type="date"
       value={editDueDate}
       onChange={(e) => setEditDueDate(e.target.value)}
       onBlur={handleBlur}
-  onKeyDown={handleKeyDown}
+      onKeyDown={handleKeyDown}
     />
     <select
       value={editPriority}
       onChange={(e) => setEditPriority(e.target.value)}
         onBlur={handleBlur}
+>
 
-    >
       <option value="Low">Low</option>
       <option value="Medium">Medium</option>
       <option value="High">High</option>
     </select>
+
+    <input
+  type="text"
+  value={editTags}
+  onChange={(e) => setEditTags(e.target.value)}
+  onBlur={handleBlur}
+  onKeyDown={handleKeyDown}
+  placeholder="Enter tags (comma separated)"
+/>
 
   </div>
 ) : (
   <span onDoubleClick={() => setIsEditing(true)} className="task-text">
     {task.text}
   </span>
-    )}
+   )}
+   {task.tags && task.tags.length > 0 && (
+  <div className="task-tags">
+    {task.tags.map((tag, i) => (
+      <span key={i} className="tag-badge">#{tag}</span>
+    ))}
+  </div>
+)}
+
   <FaTrash onClick={() => onDelete(index)} style={{ cursor: "pointer" }} />
     </li>
   );
